@@ -1,4 +1,6 @@
-module LispVal where
+module LispVal
+  (LispVal(..)) where
+
 
 data LispVal
   = Atom String
@@ -7,6 +9,7 @@ data LispVal
   | Number Integer
   | String String
   | Bool Bool
+  deriving Eq
 
 instance Show LispVal where
   -- show :: a -> String

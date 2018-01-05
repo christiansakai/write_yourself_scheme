@@ -1,4 +1,13 @@
-module Parser where
+module Parser 
+  ( readExpr 
+  , parseString
+  , parseAtom
+  , parseNumber
+  , parseExpr
+  , parseList
+  , parseDottedList
+  , parseQuoted
+  ) where
 
 import Text.ParserCombinators.Parsec hiding (spaces)
 import Control.Monad (liftM)
