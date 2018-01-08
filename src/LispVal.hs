@@ -1,6 +1,7 @@
 module LispVal
-  (LispVal(..)) where
-
+  ( LispVal(..)
+  , unwordsList
+  ) where
 
 data LispVal
   = Atom String
@@ -27,4 +28,3 @@ showVal (DottedList head tail)  = "(" ++ unwordsList head ++ " . "
 
 unwordsList :: [LispVal] -> String
 unwordsList = unwords . fmap showVal
-
