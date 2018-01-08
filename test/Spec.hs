@@ -1,12 +1,15 @@
 module Main where
 
 import Test.Hspec (hspec)
-import qualified LispValSpec as LispVal
 import qualified ParserSpec as Parser
+import qualified LispValSpec as LispVal
+import qualified LispErrorSpec as LispError
+-- import qualified EvalSpec as Eval
 
 main :: IO ()
 main = hspec $ do
-  LispVal.test
   Parser.test
+  LispVal.test
+  LispError.test
 
 

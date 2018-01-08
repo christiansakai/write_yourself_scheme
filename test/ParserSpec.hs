@@ -29,8 +29,8 @@ test =
         `shouldBe` Right (String "Hello")
 
     it "parses Atom" $ do
-      parse parseExpr name "leet"
-        `shouldBe` Right (Atom "leet")
+      parse parseExpr name "leet?"
+        `shouldBe` Right (Atom "leet?")
 
     it "parses Boolean" $ do
       parse parseExpr name "#t"

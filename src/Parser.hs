@@ -9,11 +9,31 @@ module Parser
   , parseQuoted
   ) where
 
-import Text.ParserCombinators.Parsec hiding (spaces)
+import Text.ParserCombinators.Parsec 
+  ( Parser
+  , ParseError
+  , parse
+  , oneOf
+  , skipMany1
+  , space
+  , char
+  , many
+  , many1
+  , noneOf
+  , letter
+  , digit
+  , (<|>)
+  , try
+  , sepBy
+  , endBy
+  )
 import Control.Monad (liftM)
-import Control.Monad.Except
-import LispVal
-import LispError
+import Control.Monad.Except (throwError)
+import LispVal (LispVal(..))
+import LispError 
+  ( LispError(..)
+  , ThrowsError
+  )
 
 readExpr :: String -> ThrowsError LispVal
 readExpr input =

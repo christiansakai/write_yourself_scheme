@@ -40,10 +40,7 @@ showError (TypeMisMatch expected found) =
   ++ show found
 showError (Parser parseErr)             =
   "Parse error at " ++ show parseErr
-
--- instance Error LispError where
--- noMsg = Default "An error has occurred"
--- strMsg = Default
+showError (Default str)                 = str
 
 type ThrowsError = Either LispError
 
