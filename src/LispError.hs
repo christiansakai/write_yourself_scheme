@@ -23,6 +23,7 @@ data LispError
   | NotFunction String String 
   | UnboundVar String String
   | Default String
+  deriving Eq
 
 instance Show LispError where
   -- show :: a => String a
