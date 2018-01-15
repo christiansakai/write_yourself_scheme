@@ -30,13 +30,27 @@ apply func args = maybe defaultVal applyOp maybeOp
 
 operators :: [(String, [LispVal] -> ThrowsError LispVal)]
 operators =
-  [ ("+", numericBinaryOperator (+))
-  , ("-", numericBinaryOperator (-))
-  , ("*", numericBinaryOperator (*))
-  , ("/", numericBinaryOperator div)
-  , ("mod", numericBinaryOperator mod)
-  , ("quotient", numericBinaryOperator quot)
-  , ("remainder", numericBinaryOperator rem)
+  [ ("+",         numericBinaryOperator     (+))
+  , ("-",         numericBinaryOperator     (-))
+  , ("*",         numericBinaryOperator     (*))
+  , ("/",         numericBinaryOperator     div)
+  , ("mod",       numericBinaryOperator     mod)
+  , ("quotient",  numericBinaryOperator     quot)
+
+  , ("=",         numericBoolBinaryOperator (==))
+  , ("<",         numericBoolBinaryOperator (<))
+  , (">",         numericBoolBinaryOperator (>))
+  , ("/=",        numericBoolBinaryOperator (/=))
+  , (">=",        numericBoolBinaryOperator (>=))
+  , ("<=",        numericBoolBinaryOperator (<=))
+
+  , ("&&",        booleanBoolBinaryOperator (&&))
+  , ("||",        booleanBoolBinaryOperator (||))
+
+  , ("string=?",  stringBoolBinaryOperator  (==))
+  , ("string?",   stringBoolBinaryOperator  (>))
+  , ("string<=?", stringBoolBinaryOperator  (<=))
+  , ("string>=?", stringBoolBinaryOperator  (>=))
   ]
 
 numericBinaryOperator :: (Integer -> Integer -> Integer)
@@ -61,3 +75,38 @@ unpackToNum (String n)  =
 unpackToNum (List [n])  = unpackToNum n
 unpackToNum notNum      = 
   throwError $ TypeMisMatch "number" notNum
+
+boolBinaryOp :: (LispVal -> ThrowsError a)
+             -> (a -> a -> Bool)
+             -> [LispVal]
+             -> ThrowsError LispVal
+boolBinaryOp unpacker op args =
+  if length args /= 2
+    then throwError $ NumArgs 2 args
+    else do
+      let [left, right] = args
+
+      left' <- unpacker left
+      right' <- unpacker right
+
+      return $ Bool $ left' `op` right'
+
+numericBoolBinaryOperator = boolBinaryOp unpackToNum
+
+stringBoolBinaryOperator = boolBinaryOp unpackToStr
+
+booleanBoolBinaryOperator = boolBinaryOp unpackToBool
+
+unpackToStr :: LispVal -> ThrowsError String
+unpackToStr (String s)  = return s
+unpackToStr (Number n)  = return . show $ n
+unpackToStr (Bool b)    = return . show $ b
+unpackToStr notString   =
+  throwError $ TypeMisMatch "string" notString
+
+unpackToBool :: LispVal -> ThrowsError Bool
+unpackToBool (Bool b) = return b
+unpackToBool notBool  =
+  throwError $ TypeMisMatch "boolean" notBool
+
+

@@ -67,3 +67,12 @@ test =
           Left (BadSpecialForm 
                 "Unrecognized special form" 
                 dottedList)
+
+--     -- it "eval LispVal" $ do
+--     --   eval (String "hello") `shouldBe` String "hello"
+--     --   eval (Number 1) `shouldBe` Number 1
+--     --   eval (Bool True) `shouldBe` Bool True
+--     --   eval (List [Atom "quote", Bool False]) `shouldBe` Bool False
+--     --   eval (List [Atom "+", Number 1, Number 2]) `shouldBe` Number 3
+
+

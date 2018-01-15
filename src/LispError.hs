@@ -5,7 +5,7 @@ module LispError
   , extractValue
   ) where
 
-import Text.ParserCombinators.Parsec
+import Text.ParserCombinators.Parsec (ParseError)
 import Control.Monad.Except
   ( MonadError
   , catchError
