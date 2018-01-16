@@ -1,20 +1,34 @@
-module Eval (eval) where
+module Eval 
+  ( eval
+  , evaluate
+  ) where
 
 import Control.Monad.Except (throwError)
+import Parser (readExpr)
 import LispVal (LispVal(..))
 import LispError
   ( LispError(..)
   , ThrowsError
   )
 
+evaluate :: String -> ThrowsError String
+evaluate expr = do
+  valOrErr <- readExpr expr
+  return . show . eval $ valOrErr
+
 eval :: LispVal -> ThrowsError LispVal
-eval val@(String _)             = return val
-eval val@(Number _)             = return val
-eval val@(Bool _)               = return val
-eval (List [Atom "quote", val]) = return val
-eval (List (Atom func:args))    = 
+eval val@(String _)                         = return val
+eval val@(Number _)                         = return val
+eval val@(Bool _)                           = return val
+eval (List [Atom "quote", val])             = return val
+eval (List [Atom "if", pred, conseq, alt])  = do
+  result <- eval pred
+  case result of 
+    Bool False  -> eval alt
+    otherwise   -> eval conseq
+eval (List (Atom func:args))                = 
   mapM eval args >>= apply func
-eval badForm                    =
+eval badForm                                =
   throwError $ BadSpecialForm 
     "Unrecognized special form" badForm
 
@@ -37,7 +51,7 @@ operators =
   , ("mod",       numericBinaryOperator     mod)
   , ("quotient",  numericBinaryOperator     quot)
 
-  , ("=",         numericBoolBinaryOperator (==))
+  , ("==",        numericBoolBinaryOperator (==))
   , ("<",         numericBoolBinaryOperator (<))
   , (">",         numericBoolBinaryOperator (>))
   , ("/=",        numericBoolBinaryOperator (/=))
@@ -108,5 +122,3 @@ unpackToBool :: LispVal -> ThrowsError Bool
 unpackToBool (Bool b) = return b
 unpackToBool notBool  =
   throwError $ TypeMisMatch "boolean" notBool
-
-

@@ -2,8 +2,7 @@ module Main where
 
 import System.Environment (getArgs)
 import Control.Monad (liftM)
-import Parser (readExpr)
-import Eval (eval)
+import Eval (evaluate)
 import LispError 
   ( ThrowsError
   , extractValue
@@ -21,9 +20,4 @@ main = do
   putStrLn $ 
     extractValue $ 
       trapError evaluatedOrErr
-
-evaluate :: String -> ThrowsError String
-evaluate expr = do
-  valOrErr <- readExpr expr
-  return . show . eval $ valOrErr
 
