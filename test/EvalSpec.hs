@@ -91,6 +91,7 @@ testEvaluate :: SpecWith ()
 testEvaluate = do
   testEvaluates
   testEvaluatesFunctions
+  testEvaluatesCons
   testThrowError
 
 testEvaluates :: SpecWith ()
@@ -212,6 +213,16 @@ testEvaluatesFunctions = do
     it "evaluates string>=?" $ do
       evaluate "(string>=? \"hello\" \"hello\")"
         `shouldBe` Right "Right #t"
+
+testEvaluatesCons :: SpecWith ()
+testEvaluatesCons = do
+  describe "Evaluate - cons" $ do
+    -- it "evaluates cons to list" $ do
+    --   evaluate "(cons (1 (cons 2 `shouldBe`
+   
+    it "evaluates cons to dotted list" $ do
+      evaluate "(cons 1 2)" 
+        `shouldBe` Right "Right (1 . 2)"
 
 testThrowError :: SpecWith ()
 testThrowError = do

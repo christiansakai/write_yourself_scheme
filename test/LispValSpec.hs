@@ -22,6 +22,7 @@ test =
       let str = String "Hello"
           atom = Atom "leet"
           num = Number 123
+          nil = Nil
           true = Bool True
           false = Bool False
 
@@ -31,6 +32,7 @@ test =
       show str `shouldBe` "\"Hello\""
       show atom `shouldBe` "leet"
       show num `shouldBe` "123"
+      show nil `shouldBe` ""
       show true `shouldBe` "#t"
       show false `shouldBe` "#f"
       show list `shouldBe` "(leet \"Hello\" 123)"

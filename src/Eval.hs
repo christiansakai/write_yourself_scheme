@@ -20,6 +20,7 @@ eval :: LispVal -> ThrowsError LispVal
 eval val@(String _)                         = return val
 eval val@(Number _)                         = return val
 eval val@(Bool _)                           = return val
+eval Nil                                    = return Nil
 eval (List [Atom "quote", val])             = return val
 eval (List [Atom "if", pred, conseq, alt])  = do
   result <- eval pred
@@ -62,9 +63,11 @@ operators =
   , ("||",        booleanBoolBinaryOperator (||))
 
   , ("string=?",  stringBoolBinaryOperator  (==))
-  , ("string>?",   stringBoolBinaryOperator  (>))
+  , ("string>?",  stringBoolBinaryOperator  (>))
   , ("string<=?", stringBoolBinaryOperator  (<=))
   , ("string>=?", stringBoolBinaryOperator  (>=))
+
+  , ("cons",      listBinaryOperator)
   ]
 
 numericBinaryOperator :: (Integer -> Integer -> Integer)
@@ -122,3 +125,14 @@ unpackToBool :: LispVal -> ThrowsError Bool
 unpackToBool (Bool b) = return b
 unpackToBool notBool  =
   throwError $ TypeMisMatch "boolean" notBool
+
+listBinaryOperator :: [LispVal] -> ThrowsError LispVal
+listBinaryOperator []                     =
+  throwError $ NumArgs 2 []
+listBinaryOperator singleVal@[_]          =
+  throwError $ NumArgs 2 singleVal
+listBinaryOperator [val1, vals@(List _)]  =
+  return $ List [val1, vals]
+listBinaryOperator [val1, val2]           =
+  return $ DottedList [val1] val2
+

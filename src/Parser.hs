@@ -79,7 +79,8 @@ parseNumber = try (do
 
 parseExpr :: Parser LispVal
 parseExpr = 
-      parseNumber
+      try parseNil
+  <|> parseNumber
   <|> parseString
   <|> parseAtom
   <|> parseQuoted
@@ -107,3 +108,9 @@ parseQuoted = do
   char '\''
   expr <- parseExpr
   return $ List [Atom "quote", expr]
+
+parseNil :: Parser LispVal
+parseNil = do
+  char '('
+  char ')'
+  return Nil

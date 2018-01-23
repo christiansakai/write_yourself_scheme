@@ -10,6 +10,7 @@ data LispVal
   | Number Integer
   | String String
   | Bool Bool
+  | Nil
   deriving Eq
 
 instance Show LispVal where
@@ -25,6 +26,7 @@ showVal (Bool False)            = "#f"
 showVal (List contents)         = "(" ++ unwordsList contents ++ ")"
 showVal (DottedList head tail)  = "(" ++ unwordsList head ++ " . "
                                ++ showVal tail ++ ")"
+showVal Nil                     = ""
 
 unwordsList :: [LispVal] -> String
 unwordsList = unwords . fmap showVal
