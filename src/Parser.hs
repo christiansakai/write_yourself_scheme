@@ -68,15 +68,20 @@ parseAtom = do
       _    -> Atom atom
 
 parseNumber :: Parser LispVal
-parseNumber = do 
+parseNumber = try (do 
+  char '-'
+  digits <- many1 digit
+  return . Number . negate . read $ digits
+  ) <|> (do
   digits <- many1 digit
   return . Number . read $ digits
+  )
 
 parseExpr :: Parser LispVal
 parseExpr = 
-      parseAtom
+      parseNumber
   <|> parseString
-  <|> parseNumber
+  <|> parseAtom
   <|> parseQuoted
   <|> do
         char '('

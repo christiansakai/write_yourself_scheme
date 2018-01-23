@@ -40,6 +40,10 @@ test =
       parse parseExpr name "123"
         `shouldBe` Right (Number 123)
 
+    it "parses negative Number" $ do
+      parse parseExpr name "-123"
+        `shouldBe` Right (Number (-123))
+
     it "parses List" $ do
       parse parseExpr name "(a 1 2)"
         `shouldBe` Right (List [Atom "a", Number 1, Number 2])

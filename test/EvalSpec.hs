@@ -108,6 +108,9 @@ testEvaluates = do
     it "evaluates +" $ do
       evaluate "(+ 2 2)" `shouldBe` Right "Right 4"
 
+    it "evaluates -" $ do
+      evaluate "(+ -2 2)" `shouldBe` Right "Right 0"
+
     it "evaluates recursively" $ do
       evaluate "(+ 2 (- 4 1))" `shouldBe` Right "Right 5"
 
