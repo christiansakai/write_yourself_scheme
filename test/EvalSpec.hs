@@ -91,7 +91,7 @@ testEvaluate :: SpecWith ()
 testEvaluate = do
   testEvaluates
   testEvaluatesFunctions
-  -- testThrowError
+  testThrowError
 
 testEvaluates :: SpecWith ()
 testEvaluates = do
@@ -214,26 +214,24 @@ testEvaluatesFunctions = do
         `shouldBe` Right "Right #t"
 
 testThrowError :: SpecWith ()
-testThrowError = undefined
-    -- it "evaluates recursively" $ do
-    --   evaluate "(+ 2 (-4 1))" `shouldBe` Right "Right 2"
+testThrowError = do
+  describe "Evaluate - throws error" $ do
+    it "for bad form" $ do
+      evaluate "(1 2 2)" 
+        `shouldBe` 
+          Right "Left Unrecognized special form: (1 2 2)"
 
-    -- it "evaluates number" $ do
-    --   evaluate "(1 2 2)" 
-    --     `shouldBe` 
-    --       Left (BadSpecialForm 
-    --             "Unrecognized special form"
-    --             (List [Atom "1", Atom "2", Atom "2"]))
+    it "for wrong type" $ do 
+      evaluate "(+ 2 \"two\")"
+        `shouldBe`
+          Right "Left Invalid type: expected number, found \"two\""
 
---
---
--- $ ghc -package parsec -o errorcheck [../code/listing5.hs listing5.hs]
--- $ ./errorcheck "(+ 2 \"two\")"
--- Invalid type: expected number, found "two"
--- $ ./errorcheck "(+ 2)"
--- Expected 2 args; found values 2
--- $ ./errorcheck "(what? 2)"
--- Unrecognized primitive function args: "what?"
---
---
---
+    it "for not enough arguments" $ do
+      evaluate "(+ 3)"
+        `shouldBe`
+          Right "Left Expected 2 args; found values 3"
+
+    it "unrecognized function" $ do
+      evaluate "(what? 2)"
+        `shouldBe`
+          Right "Left Unrecognized primitive function args: \"what?\""
