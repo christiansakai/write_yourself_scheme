@@ -62,7 +62,7 @@ operators =
   , ("||",        booleanBoolBinaryOperator (||))
 
   , ("string=?",  stringBoolBinaryOperator  (==))
-  , ("string?",   stringBoolBinaryOperator  (>))
+  , ("string>?",   stringBoolBinaryOperator  (>))
   , ("string<=?", stringBoolBinaryOperator  (<=))
   , ("string>=?", stringBoolBinaryOperator  (>=))
   ]

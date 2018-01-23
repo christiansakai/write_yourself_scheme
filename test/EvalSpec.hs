@@ -90,7 +90,7 @@ testFunctions =
 testEvaluate :: SpecWith ()
 testEvaluate = do
   testEvaluates
-  -- testEvaluatesFunctions
+  testEvaluatesFunctions
   -- testThrowError
 
 testEvaluates :: SpecWith ()
@@ -114,12 +114,101 @@ testEvaluates = do
     it "evaluates recursively deeper" $ do
       evaluate "(- (+ 4 6 3) 3 5 2)" `shouldBe` Right "Right 3"
 
+testEvaluatesFunctions :: SpecWith ()
+testEvaluatesFunctions = do
+  describe "Evaluate - evaluates functions" $ do
+    it "evaluates +" $ do
+      evaluate "(+ 1 2)" `shouldBe` Right "Right 3"
 
+    it "evaluates -" $ do
+      evaluate "(- 2 1)" `shouldBe` Right "Right 1"
 
+    it "evaluates - negative" $ do
+      evaluate "(- 1 2)" `shouldBe` Right "Right -1"
 
+    it "evaluates *" $ do
+      evaluate "(* 3 6)" `shouldBe` Right "Right 18"
+      
+    it "evaluates /" $ do
+      evaluate "(/ 12 4)" `shouldBe` Right "Right 3"
 
+    it "evaluates mod" $ do
+      evaluate "(mod 10 3)" `shouldBe` Right "Right 1"
 
+    it "evaluates quotient" $ do
+      evaluate "(quotient 10 3)" `shouldBe` Right "Right 3"
 
+    it "evaluates ==" $ do
+      evaluate "(== 10 3)" `shouldBe` Right "Right #f"
+
+    it "evaluates <" $ do
+      evaluate "(< 10 3)" `shouldBe` Right "Right #f"
+
+    it "evaluates >" $ do
+      evaluate "(> 10 3)" `shouldBe` Right "Right #t"
+
+    it "evaluates /=" $ do
+      evaluate "(/= 10 3)" `shouldBe` Right "Right #t"
+
+    it "evaluates >=" $ do
+      evaluate "(>= 10 3)" `shouldBe` Right "Right #t"
+
+    it "evaluates >=" $ do
+      evaluate "(>= 3 3)" `shouldBe` Right "Right #t"
+
+    it "evaluates <=" $ do
+      evaluate "(<= 3 3)" `shouldBe` Right "Right #t"
+
+    it "evaluates <=" $ do
+      evaluate "(<= 3 4)" `shouldBe` Right "Right #t"
+
+    it "evaluates &&" $ do
+      evaluate "(&& #t #t)" `shouldBe` Right "Right #t"
+
+    it "evaluates &&" $ do
+      evaluate "(&& #t #f)" `shouldBe` Right "Right #f"
+
+    it "evaluates &&" $ do
+      evaluate "(&& #f #t)" `shouldBe` Right "Right #f"
+
+    it "evaluates &&" $ do
+      evaluate "(&& #f #f)" `shouldBe` Right "Right #f"
+
+    it "evaluates ||" $ do
+      evaluate "(|| #t #t)" `shouldBe` Right "Right #t"
+
+    it "evaluates ||" $ do
+      evaluate "(|| #t #f)" `shouldBe` Right "Right #t"
+
+    it "evaluates ||" $ do
+      evaluate "(|| #f #t)" `shouldBe` Right "Right #t"
+
+    it "evaluates ||" $ do
+      evaluate "(|| #f #f)" `shouldBe` Right "Right #f"
+
+    it "evaluates string=?" $ do
+      evaluate "(string=? \"hello\" \"hello\")"
+        `shouldBe` Right "Right #t"
+
+    it "evaluates string>?" $ do
+      evaluate "(string>? \"hello\" \"hallo\")"
+        `shouldBe` Right "Right #t"
+
+    it "evaluates string<=?" $ do
+      evaluate "(string<=? \"hallo\" \"hello\")"
+        `shouldBe` Right "Right #t"
+
+    it "evaluates string<=?" $ do
+      evaluate "(string<=? \"hello\" \"hello\")"
+        `shouldBe` Right "Right #t"
+
+    it "evaluates string>=?" $ do
+      evaluate "(string>=? \"hello\" \"hallo\")"
+        `shouldBe` Right "Right #t"
+
+    it "evaluates string>=?" $ do
+      evaluate "(string>=? \"hello\" \"hello\")"
+        `shouldBe` Right "Right #t"
 
 testThrowError :: SpecWith ()
 testThrowError = undefined
@@ -145,22 +234,3 @@ testThrowError = undefined
 --
 --
 --
---
--- $ ghc -package parsec -o simple_parser [../code/listing6.1.hs listing6.1.hs]
--- $ ./simple_parser "(< 2 3)"
--- #t
--- $ ./simple_parser "(> 2 3)"
--- #f
--- $ ./simple_parser "(>= 3 3)"
--- #t
--- $ ./simple_parser "(string=? \"test\"  \"test\")"
--- #t
--- $ ./simple_parser "(string<? \"abc\" \"bba\")"
--- #t
---
---
--- $ ghc -package parsec -o simple_parser [../code/listing6.2.hs listing6.2.hs]
--- $ ./simple_parser "(if (> 2 3) \"no\" \"yes\")"
--- "yes"
--- $ ./simple_parser "(if (= 3 3) (+ 2 3 (- 5 1)) \"unequal\")"
--- 9
