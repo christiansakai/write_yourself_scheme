@@ -217,8 +217,17 @@ testEvaluatesFunctions = do
 testEvaluatesCons :: SpecWith ()
 testEvaluatesCons = do
   describe "Evaluate - cons" $ do
-    -- it "evaluates cons to list" $ do
-    --   evaluate "(cons (1 (cons 2 `shouldBe`
+    it "evaluates cons to list" $ do
+      evaluate "(cons 1 ())" 
+        `shouldBe` Right "Right (1)"
+
+    it "evaluates cons to list" $ do
+      evaluate "(cons 1 (cons 2 ()))"
+        `shouldBe` Right "Right (1 2)"
+
+    it "evaluates cons to list" $ do
+      evaluate "(cons 1 '(2 3))" 
+        `shouldBe` Right "Right (1 2 3)"
    
     it "evaluates cons to dotted list" $ do
       evaluate "(cons 1 2)" 

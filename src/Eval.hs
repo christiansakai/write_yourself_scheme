@@ -131,8 +131,10 @@ listBinaryOperator []                     =
   throwError $ NumArgs 2 []
 listBinaryOperator singleVal@[_]          =
   throwError $ NumArgs 2 singleVal
-listBinaryOperator [val1, vals@(List _)]  =
-  return $ List [val1, vals]
+listBinaryOperator [val1, Nil]            =
+  return $ List [val1]
+listBinaryOperator [val1, (List vals)]  =
+  return $ List (val1 : vals)
 listBinaryOperator [val1, val2]           =
   return $ DottedList [val1] val2
 
