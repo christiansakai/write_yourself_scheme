@@ -8,11 +8,19 @@ import System.IO
   , stdout
   )
 import Control.Monad (liftM)
+import Control.Monad.Except 
+  ( ExceptT
+  , throwError
+  , runExceptT
+  )
 import Parser (readExpr)
+import LispVal ( LispVal(..))
 import Eval (eval)
 import LispError
   ( extractValue
   , trapError
+  , LispError(..)
+  , ThrowsError
   )
 
 flushStr :: String -> IO ()
